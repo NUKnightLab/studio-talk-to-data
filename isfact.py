@@ -1,4 +1,5 @@
 from collections import defaultdict
+from parse import parse_claim_data
 import nltk
 
 
@@ -117,6 +118,9 @@ def make_score_map_word():
 
 
 if __name__ == "__main__":
+    CLAIM_TEST_DATA_FILE = "data/claim_dataset.csv"
+    claim_dict = parse_claim_data(CLAIM_TEST_DATA_FILE)
+
     s1 = "Preckwinkle's pet soda tax has been overthrown, what happens next?"
     s2 = "It had been weeks since Chicago had seen rain, so the wind-blown mist that tumbled out of the heather skies on October 11 felt like a cop-out for what should have poured down from the heavens."
     s3 = "Cook County Board President Toni Preckwinkle's sweetened beverage tax was sentenced to death at the tender age of two months old by a vote of 15 to 1 a day earlier."

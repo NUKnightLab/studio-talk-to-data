@@ -1,6 +1,7 @@
 from collections import defaultdict
 from parse import parse_claim_data
 import nltk
+import pandas as pd
 
 
 def trim_tokens(tokens):
@@ -120,28 +121,29 @@ def make_score_map_word():
 if __name__ == "__main__":
     CLAIM_TEST_DATA_FILE = "data/claim_dataset.csv"
     claim_dict = parse_claim_data(CLAIM_TEST_DATA_FILE)
-
-    s1 = "Preckwinkle's pet soda tax has been overthrown, what happens next?"
-    s2 = "It had been weeks since Chicago had seen rain, so the wind-blown mist that tumbled out of the heather skies on October 11 felt like a cop-out for what should have poured down from the heavens."
-    s3 = "Cook County Board President Toni Preckwinkle's sweetened beverage tax was sentenced to death at the tender age of two months old by a vote of 15 to 1 a day earlier."
-    s4 = "One of the security guards, Mike DeVane, leaned over."
-    s5 = "\"Were you here yesterday?\" the clean-cut, red faced, portly officer asked."
-
-
-    s6 = "It had been weeks since Chicago had seen rain"
-    s7 = "so the wind-blown mist that tumbled out of the heather skies on October 11 felt like a cop-out for what should have poured down from the heavens."
-
-    scores = []
-    scores.append(score_fact(s1))
-    scores.append(score_fact(s2))
-    scores.append(score_fact(s3))
-    scores.append(score_fact(s4))
-    scores.append(score_fact(s5))
-
-    scores2 = []
-    scores2.append(score_fact(s2))
-    scores2.append(score_fact(s6))
-    scores2.append(score_fact(s7))
-
-    print(scores)
-    #print(scores2)
+    claim_scores = {} #hashmap of scores and claims
+    for key, value in claim_dict.items():
+        claim_scores.update({score_fact(key): value})
+    
+    TEXT_FILE = 'data/article.csv'
+    data = pd.read_csv(TEXT_FILE, header=None) #read data file
+    # assumption: articles stores as columns of csv
+    # https://spacy.io/usage/linguistic-features
+    data_all = data[0][:].str.cat(sep=' ') #concatenate all cols into one string
+    #parsed_data = nlp(data_all)
+    
+    tokenizer = nltk.data.load('tokenizers/punkt/english.pickle')
+    sentences = tokenizer.tokenize(data_all)  #get sentences
+    
+    scores=[]
+    for s in sentences:
+        scores.append(score_fact(s))
+    
+#    token_text = [token.orth_ for token in parsed_data] #TEXT
+#    token_pos = [token.pos_ for token in parsed_data] #POS
+#    token_lemma = [token.lemma_ for token in parsed_data] #LEMMA
+#    token_shape = [token.shape_ for token in parsed_data] #SHAPE
+#
+#    tokens = pd.DataFrame(list(zip(token_text, token_pos, token_lemma, token_shape)),
+#                 columns=['token_text', 'part_of_speech', "lemma", "shape"])
+    

@@ -3,6 +3,8 @@ from parse import parse_claim_data
 import nltk
 import pandas as pd
 
+import en_core_web_sm
+nlp = en_core_web_sm.load()
 
 def trim_tokens(tokens):
     """
@@ -14,6 +16,7 @@ def trim_tokens(tokens):
             del tokens[i]
 
     return tokens
+
 
 def score_fact(sentence):
     """
@@ -33,7 +36,6 @@ def score_fact(sentence):
 
 
     tokens = nltk.word_tokenize(sentence)
-
     tags = nltk.pos_tag(tokens)
 
     for pair in tags:
@@ -117,33 +119,92 @@ def make_score_map_word():
 
     return score_map
 
-
-if __name__ == "__main__":
-    CLAIM_TEST_DATA_FILE = "data/claim_dataset.csv"
-    claim_dict = parse_claim_data(CLAIM_TEST_DATA_FILE)
+# takes the claims dictionary and creates a map with text (key) and scores (value)
+def claims_to_scores_dict(claim_dict):
     claim_scores = {} #hashmap of scores and claims
     for key, value in claim_dict.items():
-        claim_scores.update({score_fact(key): value})
+        score = score_fact(key)
+        claim_scores.update({score: value})
+
+# takes the claims dictionary and creates a dataframe with the text, true/false fact, and score       
+def claims_to_scores_df(claim_dict):
+    claim_df = pd.DataFrame(columns=["text", "is_fact", "score"])
+    index = 0
+    for key, value in claim_dict.items():
+        score = score_fact(key)
+        claim_df.loc[index] = [key, value, score]
+        index += 1
     
-    TEXT_FILE = 'data/article.csv'
-    data = pd.read_csv(TEXT_FILE, header=None) #read data file
-    # assumption: articles stores as columns of csv
-    # https://spacy.io/usage/linguistic-features
-    data_all = data[0][:].str.cat(sep=' ') #concatenate all cols into one string
-    #parsed_data = nlp(data_all)
-    
+#takes a string of the entire article and breaks it down into sentences
+def data_to_sentences(data_all):
     tokenizer = nltk.data.load('tokenizers/punkt/english.pickle')
-    sentences = tokenizer.tokenize(data_all)  #get sentences
-    
+    return tokenizer.tokenize(data_all)  #get sentences
+
+#gets the entities of a string
+def print_entities(sentence):
+    for num, entity in enumerate(nlp(sentence).ents):
+        print('Entity ():'.format(num + 1), entity, '-', entity.label_)
+        print('')  
+        
+def get_entities(sentence):
+    entities = {}
+    for num, entity in enumerate(nlp(sentence).ents):
+        entities.update({entity: entity.label})
+    return entities
+
+# takes a string of the data and returns a dataframe with the
+def get_tokens_chart(data):
+    parsed_data = nlp(data_all)
+    token_text = [token.orth_ for token in parsed_data] #TEXT
+    token_pos = [token.pos_ for token in parsed_data] #POS
+    token_lemma = [token.lemma_ for token in parsed_data] #LEMMA
+    token_shape = [token.shape_ for token in parsed_data] #SHAPE
+
+    return pd.DataFrame(list(zip(token_text, token_pos, token_lemma, token_shape)),
+                 columns=['token_text', 'part_of_speech', "lemma", "shape"])
+
+# gets the POS tags of a sentence 
+def get_tags(sentence):
+    tokens = nltk.word_tokenize(sentence)
+    tags = nltk.pos_tag(tokens)
+    return tags
+
+# gets quotes from data
+def get_quotes(data):
+    grammar = r'"', " '' "
+    tags = get_tags(data)
+    cp = nltk.RegexpParser(grammar) 
+    return cp.parse(tags) 
+
+if __name__ == "__main__":
+    """
+    To Do:
+    https://spacy.io/usage/linguistic-features
+    http://nlpforhackers.io/training-pos-tagger/
+    implement function to get quotes or check if something is a quote
+    implement something with entities --> all sentences with entities should be checked
+    implement training system based on claims file 
+    """
+    CLAIM_TEST_DATA_FILE = "data/claim_dataset.csv" #our claims csv
+    CLAIM_OUT_FILE = "data/claim_scores.csv" #csv to store scoring of the claims
+    TEXT_FILE = 'data/article.csv' #csv to store claims
+    """
+    claim_dict = parse_claim_data(CLAIM_TEST_DATA_FILE) #make a dict from claims file
+    claim_df = claims_to_scores_df(claim_dict)
+    """
+    # assumption: articles stores as columns of csv
+    data = pd.read_csv(TEXT_FILE, header=None) #read data file
+    data_all = data[0][:].str.cat(sep=' ') #concatenate all cols into one string
+
+    sentences = data_to_sentences(data_all)  #get sentences
     scores=[]
     for s in sentences:
         scores.append(score_fact(s))
+        print(s)
+        print_entities(s)
+        
+    # tokens = get_tokens_chart(data_all)
+    # claim_df.to_csv(CLAIM_OUT_FILE, sep='\t')
     
-#    token_text = [token.orth_ for token in parsed_data] #TEXT
-#    token_pos = [token.pos_ for token in parsed_data] #POS
-#    token_lemma = [token.lemma_ for token in parsed_data] #LEMMA
-#    token_shape = [token.shape_ for token in parsed_data] #SHAPE
-#
-#    tokens = pd.DataFrame(list(zip(token_text, token_pos, token_lemma, token_shape)),
-#                 columns=['token_text', 'part_of_speech', "lemma", "shape"])
+
     

@@ -152,6 +152,13 @@ def get_entities(sentence):
         entities.update({entity: entity.label})
     return entities
 
+### checks if the sentence has entities ####
+def has_entities(sentence):
+    entities_list = get_entities(s)
+    if len(entities_list) > 0:
+        return True
+    return False
+
 # takes a string of the data and returns a dataframe with the
 def get_tokens_chart(data):
     parsed_data = nlp(data_all)
@@ -170,11 +177,8 @@ def get_tags(sentence):
     return tags
 
 # gets quotes from data
-def get_quotes(data):
-    grammar = r'"', " '' "
-    tags = get_tags(data)
-    cp = nltk.RegexpParser(grammar) 
-    return cp.parse(tags) 
+def is_a_quote(data):
+    return False
 
 if __name__ == "__main__":
     """
@@ -182,7 +186,7 @@ if __name__ == "__main__":
     https://spacy.io/usage/linguistic-features
     http://nlpforhackers.io/training-pos-tagger/
     implement function to get quotes or check if something is a quote
-    implement something with entities --> all sentences with entities should be checked
+    implement something with entities --> all sentences with entities should be checked 
     implement training system based on claims file 
     """
     CLAIM_TEST_DATA_FILE = "data/claim_dataset.csv" #our claims csv
@@ -200,9 +204,12 @@ if __name__ == "__main__":
     scores=[]
     for s in sentences:
         scores.append(score_fact(s))
-        print(s)
-        print_entities(s)
-        
+        """
+        if (has_entities(s)):
+            print("THIS HAS ENTITIES: {0}".format(s))
+        """
+        if (is_a_quote(s)):
+            print("THIS IS A QUOTE: {0}".format(s))
     # tokens = get_tokens_chart(data_all)
     # claim_df.to_csv(CLAIM_OUT_FILE, sep='\t')
     

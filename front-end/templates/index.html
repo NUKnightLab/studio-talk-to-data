@@ -1,16 +1,14 @@
-<!DOCTYPE html>
-<html>
-    <head>
-        <title>Talking to Data</title>
-        <link rel="stylesheet" type="text/css" href={{ url_for('static', filename='main.css') }}>
-    </head>
-    <body>
-        <nav>
-            <ul>
-                <li><a href="/">Home</a></li>
-            </ul>
-        </nav>
+{% extends "base.html" %}
 
+{% block title %}
+<title>Talking to Data</title>
+{% endblock %}
+
+{% block style %}
+<link rel="stylesheet" type="text/css" href={{ url_for('static', filename='main.css') }}>
+{% endblock %}
+
+{% block body %}
         <div>
             <h1>Knight Lab Studio: Talking to Data</h1>
             <p>Please upload a document so we can fact check it.</p>
@@ -20,9 +18,4 @@
             </form>
             <p></p>
         </div>
-        <footer>
-            <ul>
-            </ul>
-        </footer>
-    </body>
-</html>
+{% endblock %}

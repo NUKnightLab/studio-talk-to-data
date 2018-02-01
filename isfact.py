@@ -1,10 +1,10 @@
 from collections import defaultdict
-from parse import parse_claim_data
+# from parse import parse_claim_data
 import nltk
 import pandas as pd
 
-import en_core_web_sm
-nlp = en_core_web_sm.load()
+import spacy
+nlp = spacy.load('en_core_web_sm')
 
 def trim_tokens(tokens):
     """
@@ -154,14 +154,14 @@ def get_entities(sentence):
 
 ### checks if the sentence has entities ####
 def has_entities(sentence):
-    entities_list = get_entities(s)
+    entities_list = get_entities(sentence)
     if len(entities_list) > 0:
         return True
     return False
 
 # takes a string of the data and returns a dataframe with the
 def get_tokens_chart(data):
-    parsed_data = nlp(data_all)
+    parsed_data = nlp(data)
     token_text = [token.orth_ for token in parsed_data] #TEXT
     token_pos = [token.pos_ for token in parsed_data] #POS
     token_lemma = [token.lemma_ for token in parsed_data] #LEMMA
@@ -177,8 +177,14 @@ def get_tags(sentence):
     return tags
 
 # gets quotes from data
+# this function still has to be implemented    
 def is_a_quote(data):
     return False
+
+# for parsing the claim files 
+def datafile_to_df(filename):
+    df= pd.read_csv(filename, header=None) 
+    return df
 
 if __name__ == "__main__":
     """
@@ -190,12 +196,16 @@ if __name__ == "__main__":
     implement training system based on claims file 
     """
     CLAIM_TEST_DATA_FILE = "data/claim_dataset.csv" #our claims csv
-    CLAIM_OUT_FILE = "data/claim_scores.csv" #csv to store scoring of the claims
+    CLAIM_FILE = "data/claims.csv"
+    OPINION_FILE = "data/opinions.csv"
+    # CLAIM_OUT_FILE = "data/claim_scores.csv" #csv to store scoring of the claims
     TEXT_FILE = 'data/article.csv' #csv to store claims
     """
     claim_dict = parse_claim_data(CLAIM_TEST_DATA_FILE) #make a dict from claims file
     claim_df = claims_to_scores_df(claim_dict)
     """
+    claim_df = datafile_to_df(CLAIM_FILE)
+    opinion_df = datafile_to_df(OPINION_FILE)
     # assumption: articles stores as columns of csv
     data = pd.read_csv(TEXT_FILE, header=None) #read data file
     data_all = data[0][:].str.cat(sep=' ') #concatenate all cols into one string
@@ -204,10 +214,8 @@ if __name__ == "__main__":
     scores=[]
     for s in sentences:
         scores.append(score_fact(s))
-        """
         if (has_entities(s)):
-            print("THIS HAS ENTITIES: {0}".format(s))
-        """
+            print("THIS CONTAINS ENTITIES: {0}".format(s))
         if (is_a_quote(s)):
             print("THIS IS A QUOTE: {0}".format(s))
     # tokens = get_tokens_chart(data_all)

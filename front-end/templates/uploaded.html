@@ -1,7 +1,7 @@
 {% extends "base.html" %}
 
 {% block title %}
-<title>Uploaded Complete</title>
+<title>Fact Finder</title>
 {% endblock %}
 
 {% block style %}
@@ -11,7 +11,28 @@
 {% block body %}
 <div>
     <h1>Knight Lab Studio: Talking to Data</h1>
-    <p>{{text}}</p>
+
+    <p> Key: &nbsp&nbsp<span style="background-color:#4286f4">Proper Noun</span>
+        &nbsp&nbsp<span style="background-color:#ff0000">Number</span>
+
+    <p></p>
+    <p></p>
+
+    <p>
+        {% for token in tokenized %}
+            {% if token.type == 0 %}
+                {{token.text}}
+            {% elif token.type == 1 %}
+                <span style="background-color:#4286f4">{{token.text}}</span>
+            {% elif token.type == 2 %}
+                <span style="background-color:#ff0000">{{token.text}}</span>
+            {% elif token.type == 3 %}
+                <span style="background-color:#19ff00">{{token.text}}</span>
+            {% endif %}
+
+
+        {% endfor %}
+    </p>
     <p></p>
 </div>
 {% endblock %}

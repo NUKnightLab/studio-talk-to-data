@@ -41,7 +41,7 @@ def color():
             else:
                 tokens.append(token_obj(pair[0], 0))
 
-        return render_template('test.html', tokenized=tokens)
+        return render_template('upload.html', tokenized=tokens)
         #except:
         #    return render_template('error.html')
     else:

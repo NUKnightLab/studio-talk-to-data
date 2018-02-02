@@ -8,15 +8,14 @@
 <link rel="stylesheet" type="text/css" href={{ url_for('static', filename='main.css') }}>
 {% endblock %}
 
-{% block body %}
+{% block main %}
 <div>
     <h1>Knight Lab Studio: Talking to Data</h1>
 
-    <p> Key: &nbsp&nbsp<span style="background-color:#4286f4">Proper Noun</span>
-        &nbsp&nbsp<span style="background-color:#ff0000">Number</span>
+    <h2> Key: &nbsp&nbsp<span style="background-color:#4286f4">Proper Noun</span>
+        &nbsp&nbsp<span style="background-color:#ff0000">Number</span></h2>
 
-    <p></p>
-    <p></p>
+    <br></br>
 
     <p>
         {% for token in tokenized %}
@@ -33,6 +32,26 @@
 
         {% endfor %}
     </p>
-    <p></p>
 </div>
+{% endblock %}
+
+{% block extra %}
+<div>
+    <br></br>
+    <h3>Proper Nouns</h3>
+    <p>
+
+    {% for token in nouns %}
+        {{token.number}}.&nbsp&nbsp&nbsp{{token.token}}&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp
+    {% endfor %}
+
+    </p>
+    <h3>Numbers</h3>
+
+    {% for token in numbers %}
+        <p>{{token.number}}.&nbsp&nbsp&nbsp{{token.token}}</p>
+    {% endfor %}
+    <br></br>
+</div>
+
 {% endblock %}

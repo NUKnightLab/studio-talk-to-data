@@ -74,6 +74,8 @@ def color():
             else:
                 if token == "``" or token == "''":
                     token = "\""
+                if i != len(tagged) - 1 and (tagged[i+1][0] == '.' or tagged[i+1][0] == ','):
+                    continue;
                 tokens.append(token_obj(token, color_code))
                 if color_code == 1:
                     nouns.append(token_list(token, nouns_count))

@@ -25,6 +25,15 @@ def color():
             self.number = number
             self.token = token
 
+    class fact_obj():
+        def __init__(self, name, list):
+            self.name = name
+            self.tokens = list
+
+    class fact_list():
+        def __init__(self, types):
+            self.type = types
+
     if request.method == 'POST':
         #try:
         #get uploaded file
@@ -41,8 +50,8 @@ def color():
         token = ''
         color_code = 0
 
-        nouns_count = 1
-        numbers_count = 1
+        nouns_count = 0
+        numbers_count = 0
 
         #iterate through token, tag pairs
         for i in range(len(tagged)):
@@ -58,7 +67,7 @@ def color():
                         token += ' '
                     continue
                 tokens.append(token_obj(token, color_code))
-                nouns.append(token_list(token, nouns_count))
+                nouns.append(token_list(token, nouns_count % 5))
                 nouns_count += 1
                 token = ''
                 color_code = 0
@@ -67,7 +76,7 @@ def color():
             elif "CD" == tag:
                 color_code = 2
                 tokens.append(token_obj(token, color_code))
-                numbers.append(token_list(token, numbers_count))
+                numbers.append(token_list(token, numbers_count % 5))
                 numbers_count += 1
                 token = ''
                 color_code = 0
@@ -78,15 +87,17 @@ def color():
                     continue;
                 tokens.append(token_obj(token, color_code))
                 if color_code == 1:
-                    nouns.append(token_list(token, nouns_count))
+                    nouns.append(token_list(token, nouns_count % 5))
                     nouns_count += 1
                 elif color_code == 2:
-                    numbers.append(token_list(token, numbers_count))
-                    numberss_count += 1
+                    numbers.append(token_list(token, numbers_count % 5))
+                    numbers_count += 1
                 token = ''
                 color_code = 0
 
-        return render_template('uploaded.html', tokenized=tokens, nouns=nouns, numbers=numbers)
+        facts = [fact_obj("Proper Nouns", nouns), fact_obj("Numbers", numbers)]
+
+        return render_template('uploaded.html', tokenized=tokens, facts=facts)
         #except:
         #    return render_template('error.html')
     else:

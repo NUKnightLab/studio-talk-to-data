@@ -12,8 +12,8 @@
 <div>
     <h1>Knight Lab Studio: Talking to Data</h1>
 
-    <h2> Key: &nbsp&nbsp<span style="background-color:#4286f4">Proper Noun</span>
-        &nbsp&nbsp<span style="background-color:#ff0000">Number</span></h2>
+    <h2> Key: &nbsp&nbsp<span style="background-color:#ffae00">Proper Noun</span>
+        &nbsp&nbsp<span style="background-color:#21ff3b">Number</span></h2>
 
     <br></br>
 
@@ -22,9 +22,9 @@
             {% if token.type == 0 %}
                 {{token.text}}
             {% elif token.type == 1 %}
-                <span style="background-color:#4286f4">{{token.text}}</span>
+                <span style="background-color:#ffae00">{{token.text}}</span>
             {% elif token.type == 2 %}
-                <span style="background-color:#ff0000">{{token.text}}</span>
+                <span style="background-color:#21ff3b">{{token.text}}</span>
             {% elif token.type == 3 %}
                 <span style="background-color:#19ff00">{{token.text}}</span>
             {% endif %}
@@ -38,20 +38,21 @@
 {% block extra %}
 <div>
     <br></br>
-    <h3>Proper Nouns</h3>
-    <p>
-
-    {% for token in nouns %}
-        {{token.number}}.&nbsp&nbsp&nbsp{{token.token}}&nbsp&nbsp&nbsp&nbsp&nbsp
-    {% endfor %}
-
-    </p>
-    <h3>Numbers</h3>
-
-    {% for token in numbers %}
-        <p>{{token.number}}.&nbsp&nbsp&nbsp{{token.token}}</p>
+    {% for type in facts %}
+        <h3>{{type.name}}</h3>
+        <table>
+        {% for token in type.tokens %}
+            {% if token.number == 0 %}
+            <tr>
+            {% endif %}
+            <td>{{token.token}}</td>
+            {% if token.number == 4 %}
+            </tr>
+            {% endif %}
+        {% endfor %}
+        </tr>
+        </table>
     {% endfor %}
     <br></br>
 </div>
-
 {% endblock %}

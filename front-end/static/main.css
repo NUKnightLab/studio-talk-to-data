@@ -50,3 +50,16 @@ ul.posts li {
     list-style: none;
     font-size: 12px;
 }
+
+table {
+  table-layout: fixed;
+  width: 100%;
+  border: 1px solid black;
+  text-align: center;
+}
+
+td {
+  text-align: center;
+  font-size: 12px;
+  height: 16px;
+}

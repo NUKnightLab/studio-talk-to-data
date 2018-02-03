@@ -174,7 +174,7 @@ if __name__ == "__main__":
     """
     
     #can try to find frequency of claim words
-    # gensium
+    # gensim
     # insert tags into sentence 
     
    

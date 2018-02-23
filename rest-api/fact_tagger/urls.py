@@ -15,7 +15,7 @@ Including another URLconf
 """
 from django.conf.urls import url, include
 from rest_framework import routers
-from fact_tagger.fact_flow import views
+from fact_flow import views
 
 router = routers.DefaultRouter()
 router.register(r'users', views.UserViewSet)

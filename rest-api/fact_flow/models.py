@@ -13,15 +13,19 @@ class Article(models.Model):
 
 class Claim(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
-    article_id = models.UUIDField(default=None, editable=True)
+    article_id = models.UUIDField(default=None, null=True, editable=True)
     text = models.TextField()
     created = models.DateTimeField(auto_now_add=True)
     updated = models.DateTimeField(auto_now_add=True)
     deleted = models.DateTimeField(null=True)
-    verified = models.DateTimeField()
+    verified = models.DateTimeField(null=True)
+    source_id = model.UUIDField(default=None, null=True, editable=True)
     start_index = models.IntegerField()
     end_index = models.IntegerField()
     claim_type = models.IntegerField()
+
+    class Meta:
+        ordering = ('start_index',)
 
 class Source(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)

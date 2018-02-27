@@ -18,3 +18,15 @@ class ArticleSerializer(serializers.Serializer):
         instance.updated = datetime.now()
         instance.save()
         return instance
+
+class UserSerializer(serializers.Serializer):
+    class Meta:
+        model = User
+        fields = ('password', 'first_name', 'last_name', 'email', 'username')
+        write_only_fields = ('password')
+
+    def create(self, validated_data):
+        user = User.objects.create(**validated_data)
+        user.set_password(validated_data['password'])
+        user.save()
+        return user

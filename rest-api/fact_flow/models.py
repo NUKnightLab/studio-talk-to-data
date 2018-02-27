@@ -36,3 +36,14 @@ class Source(models.Model):
     updated = models.DateTimeField(auto_now_add=True)
     deleted = models.DateTimeField(null=True)
     source_type = models.IntegerField()
+
+class User(models.Model):
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    created = models.DateTimeField(auto_now_add=True)
+    updated = models.DateTimeField(auto_now_add=True)
+    deleted = models.DateTimeField(null=True)
+    username = models.CharField(max_length = 100)
+    password = models.CharField(max_length = 255)
+
+    class Meta:
+        ordering = ('created',)

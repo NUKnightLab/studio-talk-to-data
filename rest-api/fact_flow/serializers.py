@@ -1,7 +1,7 @@
-from django.contrib.auth.models import User, Group
+from .models import Article, Claim, Source, User
 from rest_framework import serializers
 from datetime import datetime
-
+from django.contrib.auth.hashers import make_password, check_password
 
 class ArticleSerializer(serializers.Serializer):
     id = serializers.UUIDField(required=True)
@@ -20,13 +20,17 @@ class ArticleSerializer(serializers.Serializer):
         return instance
 
 class UserSerializer(serializers.Serializer):
-    class Meta:
-        model = User
-        fields = ('password', 'first_name', 'last_name', 'email', 'username')
-        write_only_fields = ('password')
+    id = serializers.UUIDField(required=True)
+    created = serializers.DateTimeField(required=True)
+    updated = serializers.DateTimeField(required=True)
+    deleted = serializers.DateTimeField(allow_null=True, default=None)
+    username = serializers.CharField(required=True)
+    password = serializers.CharField(required=True)
 
     def create(self, validated_data):
         user = User.objects.create(**validated_data)
-        user.set_password(validated_data['password'])
-        user.save()
+        user["password"] = make_password(user["password"])
         return user
+
+    def validate_password(self, password):
+        return check_password(password, self.password)

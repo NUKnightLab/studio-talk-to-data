@@ -4,9 +4,9 @@ from datetime import datetime
 from django.contrib.auth.hashers import make_password, check_password
 
 class ArticleSerializer(serializers.Serializer):
-    id = serializers.UUIDField(required=True)
-    created = serializers.DateTimeField(required=True)
-    updated = serializers.DateTimeField(required=True)
+    id = serializers.UUIDField()
+    created = serializers.DateTimeField()
+    updated = serializers.DateTimeField()
     deleted = serializers.DateTimeField(allow_null=True, default=None)
     text = serializers.CharField(required=True)
 
@@ -20,17 +20,15 @@ class ArticleSerializer(serializers.Serializer):
         return instance
 
 class UserSerializer(serializers.Serializer):
-    id = serializers.UUIDField(required=True)
-    created = serializers.DateTimeField(required=True)
-    updated = serializers.DateTimeField(required=True)
-    deleted = serializers.DateTimeField(allow_null=True, default=None)
+    id = serializers.UUIDField(default=None)
+    created = serializers.DateTimeField(default=None)
+    updated = serializers.DateTimeField(default=None)
+    deleted = serializers.DateTimeField(default=None)
     username = serializers.CharField(required=True)
     password = serializers.CharField(required=True)
 
     def create(self, validated_data):
         user = User.objects.create(**validated_data)
-        user["password"] = make_password(user["password"])
+        user.password = make_password(user.password)
+        user.save()
         return user
-
-    def validate_password(self, password):
-        return check_password(password, self.password)

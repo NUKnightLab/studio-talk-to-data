@@ -1,4 +1,4 @@
-from .serializer import Article, Claim, Source, User
+from .models import Article, Claim, Source, User
 from rest_framework import serializers
 from datetime import datetime
 from django.contrib.auth.hashers import make_password, check_password
@@ -41,17 +41,17 @@ class UserSerializer(serializers.Serializer):
         instance.save()
         return instance
 
-class ClaimSerializer(serializer.Serializer):
-    id = serializer.UUIDField(default=None)
-    article_id = serializer.UUIDField(default=None)
-    text = serializer.TextField(required=True)
-    created = serializer.DateTimeField(default=None)
-    updated = serializer.DateTimeField(default=None)
-    deleted = serializer.DateTimeField(default=None)
-    verified = serializer.DateTimeField(default=None)
-    source_id = serializer.UUIDField(default=None)
-    start_index = serializer.IntegerField(required=True)
-    claim_type = serializer.IntegerField(required=True)
+class ClaimSerializer(serializers.Serializer):
+    id = serializers.UUIDField(default=None)
+    article_id = serializers.UUIDField(default=None)
+    text = serializers.CharField(required=True)
+    created = serializers.DateTimeField(default=None)
+    updated = serializers.DateTimeField(default=None)
+    deleted = serializers.DateTimeField(default=None)
+    verified = serializers.DateTimeField(default=None)
+    source_id = serializers.UUIDField(default=None)
+    start_index = serializers.IntegerField(required=True)
+    claim_type = serializers.IntegerField(required=True)
 
     def create(self, validated_data):
         claim = Claim.objects.create(**validated_data)
@@ -69,15 +69,15 @@ class ClaimSerializer(serializer.Serializer):
         return instance
 
 
-class SourceSerializer(serializer.Serializer):
-    id = serializer.UUIDField(default=None)
-    url = serializer.URLField(default=None)
-    name = serializer.CharField(max_length = 255, required=True)
-    description = serializer.TextField(default=None)
-    created = serializer.DateTimeField(default=None)
-    updated = serializer.DateTimeField(default=None)
-    deleted = serializer.DateTimeField(default=None)
-    source_type = serializer.IntegerField(default=None)
+class SourceSerializer(serializers.Serializer):
+    id = serializers.UUIDField(default=None)
+    url = serializers.URLField(default=None)
+    name = serializers.CharField(max_length = 255, required=True)
+    description = serializers.CharField(default=None)
+    created = serializers.DateTimeField(default=None)
+    updated = serializers.DateTimeField(default=None)
+    deleted = serializers.DateTimeField(default=None)
+    source_type = serializers.IntegerField(default=None)
 
     def create(self, validated_data):
         source = Source.objects.create(**validated_data)

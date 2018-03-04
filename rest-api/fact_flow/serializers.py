@@ -4,7 +4,7 @@ from datetime import datetime
 from django.contrib.auth.hashers import make_password, check_password
 
 class ArticleSerializer(serializers.Serializer):
-    id = serializers.UUIDField()
+    id = serializers.UUIDField(default=None)
     created = serializers.DateTimeField(default=None)
     updated = serializers.DateTimeField(default=None)
     deleted = serializers.DateTimeField(allow_null=True, default=None)

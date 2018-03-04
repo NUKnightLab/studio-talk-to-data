@@ -26,9 +26,16 @@ class UserSerializer(serializers.Serializer):
     deleted = serializers.DateTimeField(default=None)
     username = serializers.CharField(required=True)
     password = serializers.CharField(required=True)
-
+    
     def create(self, validated_data):
         user = User.objects.create(**validated_data)
         user.password = make_password(user.password)
         user.save()
         return user
+
+    def update(self, instance, validated_data):
+        instance.username = validated_data.get('username', instance.username)
+        instance.password = make_password(validated_data.get('password', instance.password))
+        instance.updated = datetime.now()
+        instance.save()
+        return instance

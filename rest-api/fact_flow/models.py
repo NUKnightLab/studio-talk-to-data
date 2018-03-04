@@ -21,7 +21,6 @@ class Claim(models.Model):
     verified = models.DateTimeField(null=True)
     source_id = models.UUIDField(default=None, null=True, editable=True)
     start_index = models.IntegerField()
-    end_index = models.IntegerField()
     claim_type = models.IntegerField()
 
     class Meta:

@@ -1,7 +1,7 @@
 from .models import Article, Claim, Source, User
 from rest_framework import serializers
 from datetime import datetime
-from django.contrib.auth.hashers import make_password, check_password
+from django.contrib.auth.hashers import make_password
 
 class ArticleSerializer(serializers.Serializer):
     id = serializers.UUIDField(default=None)

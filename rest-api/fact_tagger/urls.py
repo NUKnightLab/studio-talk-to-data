@@ -17,7 +17,7 @@ from django.conf.urls import url, include
 from rest_framework import routers
 from fact_flow import views
 
-router = routers.DefaultRouter()
+router = routers.DefaultRouter(trailing_slash=False)
 router.register(r'users', views.UserViewSet)
 router.register(r'articles', views.ArticleViewSet)
 

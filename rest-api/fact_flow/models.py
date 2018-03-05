@@ -1,4 +1,5 @@
 from django.db import models
+from django.contrib.auth.hashers import check_password
 import uuid
 
 class Article(models.Model):
@@ -43,6 +44,9 @@ class User(models.Model):
     deleted = models.DateTimeField(null=True)
     username = models.CharField(max_length = 100)
     password = models.CharField(max_length = 255)
+
+    def validate_password(self, plain_text_password):
+        return check_password(plain_text_password, self.password)
 
     class Meta:
         ordering = ('created',)

@@ -1,5 +1,5 @@
-from .models import User, Article, Claim
-from .serializers import UserSerializer, ArticleSerializer, ClaimSerializer
+from .models import User, Article, Claim, Source
+from .serializers import UserSerializer, ArticleSerializer, ClaimSerializer, SourceSerializer
 from .process_article import get_all_claims
 from rest_framework import viewsets
 from rest_framework.decorators import detail_route, list_route
@@ -56,16 +56,10 @@ class ArticleViewSet(viewsets.ModelViewSet):
     queryset = Article.objects.all().order_by('-created')
     serializer_class = ArticleSerializer
 
-    # def create(self, request):
-    #     # check to see request body contains article text
-    #         # if so, identify entities
-    #             # create and save article
-    #             # create and save claim objects for each identified entity
-    #         # otherwise, return an error for bad request
-    #     serializer = self.get_serializer(data = request.data)
-    #     serializer.is_valid(raise_exception=True)
-    #     self.perform_create(serializer)
-
 class ClaimViewSet(viewsets.ModelViewSet):
     queryset = Claim.objects.all().order_by('-created')
-    serializer = ClaimSerializer
+    serializer_class = ClaimSerializer
+
+class SourceViewSet(viewsets.ModelViewSet):
+    queryset = Source.objects.all().order_by('-created')
+    serializer_class = SourceSerializer

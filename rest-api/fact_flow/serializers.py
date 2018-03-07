@@ -54,9 +54,7 @@ class ClaimSerializer(serializers.Serializer):
     claim_type = serializers.IntegerField(required=True)
 
     def create(self, validated_data):
-        claim = Claim.objects.create(**validated_data)
-        claim.save()
-        return claim
+        return Claim.objects.create(**validated_data)
 
     def update(self, instance, validated_data):
         instance.text = validated_data.get('text', instance.text)
@@ -67,7 +65,6 @@ class ClaimSerializer(serializers.Serializer):
         instance.updated = datetime.now()
         instance.save()
         return instance
-
 
 class SourceSerializer(serializers.Serializer):
     id = serializers.UUIDField(default=None)
@@ -80,9 +77,7 @@ class SourceSerializer(serializers.Serializer):
     source_type = serializers.IntegerField(default=None)
 
     def create(self, validated_data):
-        source = Source.objects.create(**validated_data)
-        source.save()
-        return source
+        return Source.objects.create(**validated_data)
 
     def update(self, instance, validated_data):
         instance.url = validated_data.get('url', instance.url)
